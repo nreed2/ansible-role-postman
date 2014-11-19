@@ -1,0 +1,23 @@
+---
+
+- name: Remove ozp-rest directory if exists
+  file: >
+    state=absent
+    path=/home/ansible/ozp-rest
+
+- name: Clone ozp-rest
+  git:
+    repo: https://github.com/ozone-development/ozp-rest.git
+    dest: /home/ansible/ozp-rest
+
+- name: Install node modules
+  command: npm install chdir=/home/ansible/ozp-rest
+
+- name: Set environment for dev
+  template: src=package.json dest=/home/ansible/ozp-rest/package.json mode=0644
+
+- name: Load sample meta data
+  command: npm run loadSampleMetaData chdir=/home/ansible/ozp-rest
+
+- name: Load sample listings
+  command: npm run loadSampleListings chdir=/home/ansible/ozp-rest
